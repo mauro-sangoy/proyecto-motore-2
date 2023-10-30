@@ -2,23 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class ControlBot : MonoBehaviour
 {
+    [SerializeField] private Transform target;
+    [SerializeField] private NavMeshAgent agent;
+    [SerializeField] private float FindTargetRate;
+    [SerializeField] private float initialDelay;
+
     private int HP;
-    private GameObject Player;
     public int Velocidad;
 
     private void Start()
     {
+        agent = GetComponent<NavMeshAgent>();
+        InvokeRepeating("FindTarget", initialDelay, FindTargetRate);
         HP = 100;
-        Player = GameObject.Find("Player");
     }
 
     private void Update()
     {
-        transform.LookAt(Player.transform); //rota segun lka posicion de otro objeto
-        transform.Translate(Velocidad * Vector3.forward * Time.deltaTime); //avanza solo hacia adelante
+        agent.destination = target.position;
     }
 
     public void RecibirDaño() 
@@ -41,5 +46,9 @@ public class ControlBot : MonoBehaviour
         {
             RecibirDaño();
         }
+    }
+    private void FindTarget()
+    {
+        
     }
 }

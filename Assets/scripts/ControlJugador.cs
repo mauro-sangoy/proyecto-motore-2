@@ -2,19 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ControlJugador : MonoBehaviour
 {
     public Camera CamaraPrimeraPersona;
     public GameObject Proyectil; //noombre del objeto
+    public Text Victoria;
+    public Text recolectados;
+    private int Cont;
+
 
     public float VelocidadDeMovimiento = 10.0f; //velocidad de movimiento
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked; // desaparece el cursor
+        Victoria.text = "";
+       
+        setearTextos();
     }
 
-  
+    
+    private void setearTextos()
+    {
+        recolectados.text = "20/" + Cont.ToString();
+        if(Cont >= 20)
+        {
+            Victoria.text = "Victoria";
+        }
+    }
+
+
     void Update()
     {   // movimiento de los ejes x, y
         float MovimientoY = Input.GetAxis("Vertical") * VelocidadDeMovimiento;
@@ -61,4 +79,15 @@ public class ControlJugador : MonoBehaviour
             }
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.CompareTag("coleccionable") == true) 
+        {
+            Cont = Cont + 1;
+            setearTextos();
+            other.gameObject.SetActive(false);
+        }
+    }
+
 }
